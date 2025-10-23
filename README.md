@@ -1,5 +1,5 @@
-# Docker Projects in Laravel
-# 🚀 Welcome to my Docker projects in Laravel tutorial! 🚀# 
+# Docker GLPI Laravel
+# 🚀 Welcome to my Docker projects in GLPI tutorial! 🚀# 
 
 Hey there! I'm Lorraine, a 21-year-old programmer who loves working with shell scripts and Docker. Since I'm practicing my English, I decided to write this tutorial in English. Let's get started!
 
