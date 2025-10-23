@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # PHP Service
+  # PHP Service (Laravel backend)
   app:
     build:
       context: .
@@ -13,14 +13,14 @@ services:
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
-    working_dir: /var/www/project-laravel
+    working_dir: /home/lorrainecamargo/projeto/Docker-projects-laravel
     volumes:
-      - ./:/var/www/project-laravel
+      - ./:/home/lorrainecamargo/projeto/Docker-projects-laravel
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
 
-  # Nginx Service
+  # Nginx Service (Laravel frontend)
   webserver:
     image: nginx:alpine
     container_name: Nginx
@@ -30,14 +30,14 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./:/var/www/project-laravel
+      - ./:/home/lorrainecamargo/projeto/Docker-projects-laravel
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
     depends_on:
       - app
 
-  # MySQL Service
+  # MySQL Database
   db:
     image: mysql:latest
     container_name: Mysql
@@ -56,7 +56,7 @@ services:
     networks:
       - app-network
 
-  # PhpMyAdmin Service
+  # PhpMyAdmin (acesso ao banco via navegador)
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: Phpmyadmin
@@ -70,6 +70,39 @@ services:
       - app-network
     depends_on:
       - db
+
+  # GLPI (sistema de gestão de ativos e helpdesk)
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      TIMEZONE: America/Sao_Paulo
+      DB_HOST: db
+      DB_NAME: glpi
+      DB_USER: root
+      DB_PASSWORD: root
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # GLPI Agent (inventário automático) - usando Dockerfile.glpi-agent
+  glpi-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.glpi-agent
+    container_name: glpi-agent
+    restart: unless-stopped
+    command: >
+      --server http://glpi/front/inventory.php
+    networks:
+      - app-network
+    depends_on:
+      - glpi
+
 
 # Docker Networks
 networks:

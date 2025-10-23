@@ -2,7 +2,7 @@
 FROM php:8.1-fpm
 
 # Mude o diretório de trabalho para o projeto Laravel
-WORKDIR /var/www/project-laravel
+WORKDIR /home/lorrainecamargo/projeto/Docker-projects-laravel
 
 # Instale as dependências necessárias
 RUN apt-get update && apt-get upgrade -y \
@@ -40,7 +40,7 @@ RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 COPY composer.json /var/www/
 
 # Copie os arquivos do projeto para o diretório de trabalho
-COPY . /var/www/project-laravel
+COPY . /home/lorrainecamargo/projeto/Docker-projects-laravel
 
 # Copie o arquivo de configuração PHP local
 COPY php/local.ini /usr/local/etc/php/conf.d/local.ini

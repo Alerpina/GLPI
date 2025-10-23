@@ -1,0 +1,16 @@
+FROM debian:bullseye-slim
+
+# Atualiza o sistema e instala dependências
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates \
+    gnupg \
+    perl \
+    && wget https://github.com/glpi-project/glpi-agent/releases/download/1.15/glpi-agent-1.15-linux-installer.pl \
+    && chmod +x glpi-agent-1.15-linux-installer.pl \
+    && ./glpi-agent-1.15-linux-installer.pl --install \
+    && rm glpi-agent-1.15-linux-installer.pl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Comando padrão ao iniciar o container
+ENTRYPOINT ["/usr/bin/glpi-agent"]
